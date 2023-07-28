@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+body {
+  font-family: "Inter", sans-serif;
+  overflow: hidden;
+}
+#canvas {
+  image-rendering: pixelated;
+}
+#gui {
+  pointer-events: none;
+  position: fixed;
+  display: flex;
+  bottom: 40px;
+  left: 0;
+  height: fit-content;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+#gui-wrapper {
+  gap: 15px;
+  display: flex;
+}
+#pallete {
+  pointer-events: all;
+  display: flex;
+  width: 158px;
+  height: fit-content;
+  padding: 2px;
+  align-items: center;
+  align-content: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  background: #000;
+}
+.color {
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+.color.selected {
+  border: 1px white solid;
+}
+.info {
+  display: flex;
+}
+#userdata {
+  gap: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+#avatar {
+  background-image: url("images/blank_pfp.png");
+  background-size: contain;
+  width: 80px;
+  height: 80px;
+}
+#userstats {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}

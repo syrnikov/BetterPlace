@@ -1,0 +1,56 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BetterPlace</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <canvas id="canvas" width="10000" height="10000"></canvas>
+    <div id="gui">
+        <div id="gui-wrapper">
+            <div id="pallete">
+                <div class="color " style="background-color: #E51D1D;" onclick="setColor('#E51D1D');"></div>
+                <div class="color" style="background-color: #F26C8C;" onclick="setColor('#F26C8C');"></div>
+                <div class="color" style="background-color: #FD6524;" onclick="setColor('#FD6524');"></div>
+                <div class="color" style="background-color: #FFB13C;" onclick="setColor('#FFB13C');"></div>
+                <div class="color" style="background-color: #44812F;" onclick="setColor('#44812F');"></div>
+                <div class="color" style="background-color: #1FDB8C;" onclick="setColor('#1FDB8C');"></div>
+                <div class="color" style="background-color: #1B56C7;" onclick="setColor('#1B56C7');"></div>
+                <div class="color" style="background-color: #40A9F5;" onclick="setColor('#40A9F5');"></div>
+                <div class="color" style="background-color: #8033CC;" onclick="setColor('#8033CC');"></div>
+                <div class="color" style="background-color: #CB6FF5;" onclick="setColor('#CB6FF5');"></div>
+                <div class="color" style="background-color: #534337;" onclick="setColor('#534337');"></div>
+                <div class="color" style="background-color: #E5C2A8;" onclick="setColor('#E5C2A8');"></div>
+                <div class="color selected" style="background-color: #000000;" onclick="setColor('#000000');"></div>
+                <div class="color" style="background-color: #363636;" onclick="setColor('#363636');"></div>
+                <div class="color" style="background-color: #585858;" onclick="setColor('#585858');"></div>
+                <div class="color" style="background-color: #828282;" onclick="setColor('#828282');"></div>
+                <div class="color" style="background-color: #BCBCBC;" onclick="setColor('#BCBCBC');"></div>
+                <div class="color" style="background-color: #FFFFFF;" onclick="setColor('#FFFFFF');"></div>
+            </div>
+            <div id="userdata">
+                <div id="avatar"></div>
+                <div id="userstats">
+                    <p>Username</p>
+                    <div class="info">
+                        <p>Pixels Placed</p>
+                        <p id="pixel-stat">&</p>
+                    </div>
+                    <div class="info">
+                        <p>Cooldown</p>
+                        <p id="cooldown">&</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="renderer.js"></script>
+</body>
+
+</html>
