@@ -1,3 +1,55 @@
+// renderer.js
+
+// Import the necessary Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+import {
+  getDatabase,
+  ref,
+  set,
+  onValue,
+} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
+
+// Your existing code...
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCnglllo9tD1B-LrzVszFyXvhfN2j5Go2w",
+  authDomain: "betterplace-b236d.firebaseapp.com",
+  databaseURL:
+    "https://betterplace-b236d-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "betterplace-b236d",
+  storageBucket: "betterplace-b236d.appspot.com",
+  messagingSenderId: "764902930248",
+  appId: "1:764902930248:web:c1b20982ff45cd1d8be57d",
+  measurementId: "G-ZTJ0CC2QKV",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(); // Get the Firebase database object
+
+// ----- Canvas related setup -----
+
+// ... (your existing canvas-related code)
+
+// ----- Array to store plalet placedPixels = [];
+
+// Function to save placedPixels data to Firebase database
+function savePlacedPixelsToDatabase() {
+  const pixelsRef = ref(database, "pixels");
+  const pixelData = {};
+
+  placedPixels.forEach((pixel) => {
+    const key = `${pixel.y}_${pixel.x}`;
+    pixelData[key] = { color: pixel.color };
+  });
+
+  set(pixelsRef, pixelData);
+}
+
+let placedPixels = [];
+
 document.addEventListener("DOMContentLoaded", () => {
   //setup ------- canvas settings
   const canvas = document.getElementById("canvas");
@@ -12,13 +64,25 @@ document.addEventListener("DOMContentLoaded", () => {
   let cooldownTime = 0;
   const cooldownInterval = 1000; // 1 second in milliseconds
 
-  // ----- pan and zoom variables
-  let panX = 0;
-  let panY = 0;
-  let zoom = 1;
+  // Function to initialize canvas from Firebase database
+  function initializeCanvasFromDatabase() {
+    const pixelsRef = ref(database, "pixels");
+    onValue(pixelsRef, (snapshot) => {
+      const pixelData = snapshot.val();
+      if (pixelData) {
+        for (const key in pixelData) {
+          const [y, x] = key.split("_");
+          placedPixels.push({
+            x: parseInt(x),
+            y: parseInt(y),
+            color: pixelData[key].color,
+          });
+        }
 
-  // ----- array to store placed pixels
-  const placedPixels = [];
+        redraw();
+      }
+    });
+  }
 
   function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -47,96 +111,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }, cooldownInterval);
   }
 
-  function handleCanvasMouseDown(e) {
-    if (e.button === 0) {
-      // Left mouse button for pixel placement
-      const canvasBounds = canvas.getBoundingClientRect();
-      const x = (e.clientX - canvasBounds.left - panX) / zoom;
-      const y = (e.clientY - canvasBounds.top - panY) / zoom;
-      const pixelX = Math.floor(x / PixelSize);
-      const pixelY = Math.floor(y / PixelSize);
-
-      if (
-        pixelX >= 0 &&
-        pixelX < canvasRes &&
-        pixelY >= 0 &&
-        pixelY < canvasRes &&
-        cooldownTime <= 0 // Check if the cooldown is over
-      ) {
-        placePixel(pixelY, pixelX);
-        startCooldown(); // Start the cooldown timer after placing the pixel
-      }
-    } else if (e.button === 2) {
-      // Right mouse button for panning
-      isDragging = true;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      canvas.style.cursor = "grabbing";
-    }
-  }
-
-  // ----- pixel border cursor variables
-  let showPixelBorder = false;
-  let pixelBorderX = 0;
-  let pixelBorderY = 0;
-
-  function drawPixelBorder() {
-    if (showPixelBorder) {
-      ctx.strokeStyle = currentColor;
-      ctx.lineWidth = 2;
-      const borderX = pixelBorderX * PixelSize * zoom + panX;
-      const borderY = pixelBorderY * PixelSize * zoom + panY;
-      ctx.strokeRect(borderX, borderY, PixelSize * zoom, PixelSize * zoom);
-    }
-  }
-
-  function handleCanvasMouseMove(e) {
-    if (isDragging) {
-      const deltaX = e.clientX - lastX;
-      const deltaY = e.clientY - lastY;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      panX += deltaX;
-      panY += deltaY;
-      canvas.style.cursor = "grabbing";
-      redraw();
-    } else {
-      // Calculate the pixel border position
-      const canvasBounds = canvas.getBoundingClientRect();
-      const x = (e.clientX - canvasBounds.left - panX) / zoom;
-      const y = (e.clientY - canvasBounds.top - panY) / zoom;
-      const pixelX = Math.floor(x / PixelSize);
-      const pixelY = Math.floor(y / PixelSize);
-
-      // Only show the pixel border cursor when cooldown is not active
-      if (cooldownTime <= 0) {
-        showPixelBorder = true;
-        pixelBorderX = pixelX;
-        pixelBorderY = pixelY;
-      } else {
-        showPixelBorder = false;
-      }
-
-      // Redraw the entire canvas with the updated pixel border cursor
-      redraw();
-    }
-  }
-
-  function handleCanvasMouseUp(e) {
-    if (e.button === 2) {
-      // Right mouse button
-      isDragging = false;
-      canvas.style.cursor = "default";
-    }
-  }
-
   function placePixel(pixelY, pixelX) {
-    const StartX = pixelX * PixelSize * zoom + panX;
-    const StartY = pixelY * PixelSize * zoom + panY;
+    const StartX = pixelX * PixelSize;
+    const StartY = pixelY * PixelSize;
     ctx.fillStyle = currentColor;
-    ctx.fillRect(StartX, StartY, PixelSize * zoom, PixelSize * zoom);
+    ctx.fillRect(StartX, StartY, PixelSize, PixelSize);
+
     // Store the placed pixel in the array
     placedPixels.push({ x: pixelX, y: pixelY, color: currentColor });
+
+    // Save the placed pixel data to the Firebase database
+    const pixelRef = ref(database, `pixels/${pixelY}_${pixelX}`);
+    set(pixelRef, { color: currentColor });
+  }
+
+  function listenForPixelChanges() {
+    const pixelsRef = ref(database, "pixels");
+    onValue(pixelsRef, (snapshot) => {
+      const pixelData = snapshot.val();
+      if (pixelData) {
+        // Clear the existing placed pixels array
+        placedPixels.length = 0;
+
+        // Loop through the pixel data and update the placedPixels array
+        for (const key in pixelData) {
+          const [y, x] = key.split("_");
+          placedPixels.push({
+            x: parseInt(x),
+            y: parseInt(y),
+            color: pixelData[key].color,
+          });
+        }
+
+        // Redraw the canvas with the updated pixel data
+        redraw();
+      }
+    });
   }
 
   function selectColor(colorElement) {
@@ -158,51 +168,50 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function handleWheelZoom(e) {
-    e.preventDefault();
-    const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
-    const canvasBounds = canvas.getBoundingClientRect();
-    const x = e.clientX - canvasBounds.left;
-    const y = e.clientY - canvasBounds.top;
-    const oldZoom = zoom;
-    zoom *= zoomFactor;
-    panX = x - (x - panX) * (zoom / oldZoom);
-    panY = y - (y - panY) * (zoom / oldZoom);
-    redraw();
-  }
-
   function redraw() {
-    clearCanvas();
+    // Clear the entire canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Apply the inverse transformations (zoom and pan) to the canvas context
+    ctx.save();
     // Loop through the placedPixels array and redraw them with the correct transformations
     placedPixels.forEach((pixel) => {
-      const StartX = pixel.x * PixelSize * zoom + panX;
-      const StartY = pixel.y * PixelSize * zoom + panY;
+      const StartX = pixel.x * PixelSize;
+      const StartY = pixel.y * PixelSize;
       ctx.fillStyle = pixel.color;
-      ctx.fillRect(StartX, StartY, PixelSize * zoom, PixelSize * zoom);
+      ctx.fillRect(StartX, StartY, PixelSize, PixelSize);
     });
+    // Restore the canvas context to its original state (remove the transformations)
+    ctx.restore();
+  }
+  function handleCanvasMouseDown(e) {
+    if (e.button === 0) {
+      // Left mouse button for pixel placement
+      const canvasBounds = canvas.getBoundingClientRect();
+      const x = e.clientX - canvasBounds.left;
+      const y = e.clientY - canvasBounds.top;
+      const pixelX = Math.floor(x / PixelSize);
+      const pixelY = Math.floor(y / PixelSize);
 
-    // Draw the pixel border cursor if required
-    drawPixelBorder();
+      if (
+        pixelX >= 0 &&
+        pixelX < canvasRes &&
+        pixelY >= 0 &&
+        pixelY < canvasRes &&
+        cooldownTime <= 0 // Check if the cooldown is over
+      ) {
+        placePixel(pixelY, pixelX);
+        startCooldown(); // Start the cooldown timer after placing the pixel
+      }
+    }
   }
 
-  let isDragging = false;
-  let lastX = 0;
-  let lastY = 0;
-
   window.setColor = setColor;
-
-  // Add event listeners for pixel placement, zoom, and pan
   canvas.addEventListener("mousedown", handleCanvasMouseDown);
-  canvas.addEventListener("mousemove", handleCanvasMouseMove);
-  canvas.addEventListener("mouseup", handleCanvasMouseUp);
-  canvas.addEventListener("mouseleave", () => {
-    showPixelBorder = false;
-    redraw();
-  });
   canvas.addEventListener("contextmenu", (e) => e.preventDefault()); // Prevent right-click context menu
-  canvas.addEventListener("wheel", handleWheelZoom);
 
   // Initialize the canvas with a white background
-  clearCanvas();
+  // Call the function to listen for pixel changes
+  listenForPixelChanges();
+  initializeCanvasFromDatabase();
 });
