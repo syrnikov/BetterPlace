@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvasRes = 1000;
   const PixelSize = canvas.width / canvasRes;
   let cooldownTime = 0;
-  const cooldownInterval = 0; // 1 second in milliseconds
+  const cooldownInterval = 1000; // 1 second in milliseconds
 
   // ----- pan and zoom variables
   let panX = 0;
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function startCooldown() {
-    cooldownTime = 10;
+    cooldownTime = 60 * 5; //cooldown
     updateCooldownDisplay();
     const cooldownIntervalId = setInterval(() => {
       cooldownTime--;
@@ -75,6 +75,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // ----- pixel border cursor variables
+  let showPixelBorder = false;
+  let pixelBorderX = 0;
+  let pixelBorderY = 0;
+
+  function drawPixelBorder() {
+    if (showPixelBorder) {
+      ctx.strokeStyle = currentColor;
+      ctx.lineWidth = 2;
+      const borderX = pixelBorderX * PixelSize * zoom + panX;
+      const borderY = pixelBorderY * PixelSize * zoom + panY;
+      ctx.strokeRect(borderX, borderY, PixelSize * zoom, PixelSize * zoom);
+    }
+  }
+
   function handleCanvasMouseMove(e) {
     if (isDragging) {
       const deltaX = e.clientX - lastX;
@@ -84,6 +99,25 @@ document.addEventListener("DOMContentLoaded", () => {
       panX += deltaX;
       panY += deltaY;
       canvas.style.cursor = "grabbing";
+      redraw();
+    } else {
+      // Calculate the pixel border position
+      const canvasBounds = canvas.getBoundingClientRect();
+      const x = (e.clientX - canvasBounds.left - panX) / zoom;
+      const y = (e.clientY - canvasBounds.top - panY) / zoom;
+      const pixelX = Math.floor(x / PixelSize);
+      const pixelY = Math.floor(y / PixelSize);
+
+      // Only show the pixel border cursor when cooldown is not active
+      if (cooldownTime <= 0) {
+        showPixelBorder = true;
+        pixelBorderX = pixelX;
+        pixelBorderY = pixelY;
+      } else {
+        showPixelBorder = false;
+      }
+
+      // Redraw the entire canvas with the updated pixel border cursor
       redraw();
     }
   }
@@ -139,6 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function redraw() {
     clearCanvas();
+
     // Loop through the placedPixels array and redraw them with the correct transformations
     placedPixels.forEach((pixel) => {
       const StartX = pixel.x * PixelSize * zoom + panX;
@@ -146,6 +181,9 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.fillStyle = pixel.color;
       ctx.fillRect(StartX, StartY, PixelSize * zoom, PixelSize * zoom);
     });
+
+    // Draw the pixel border cursor if required
+    drawPixelBorder();
   }
 
   let isDragging = false;
@@ -158,6 +196,10 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("mousedown", handleCanvasMouseDown);
   canvas.addEventListener("mousemove", handleCanvasMouseMove);
   canvas.addEventListener("mouseup", handleCanvasMouseUp);
+  canvas.addEventListener("mouseleave", () => {
+    showPixelBorder = false;
+    redraw();
+  });
   canvas.addEventListener("contextmenu", (e) => e.preventDefault()); // Prevent right-click context menu
   canvas.addEventListener("wheel", handleWheelZoom);
 
