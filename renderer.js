@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startCooldown() {
     isCooldownActive = true; // Set the flag to indicate that the cooldown is active
-    cooldownTime = 60 * 5; //cooldown
+    cooldownTime = 0; //cooldown
     updateCooldownDisplay();
     const cooldownIntervalId = setInterval(() => {
       cooldownTime--;

@@ -1,15 +1,25 @@
 {
-  "name": "rplace-electron",
+  "name": "BetterPlace",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "electron": "^25.3.2"
+  "dependencies": {},
+  "devDependencies": {
+    "electron-packager": "^17.1.1"
+  },
+  "build": {
+    "appId": "com.syrnikov.artem",
+    "productName": "BetterPlace",
+    "win": {
+      "target": "nsis",
+      "icon": "images/betterplace.ico"
+    }
   }
 }
