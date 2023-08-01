@@ -6,12 +6,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BetterPlace</title>
+
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="styles.css">
 
 </head>
 
 <body>
+    <div id="login">
+        <div id="login-title">
+            <p>Welcome to</p>
+            <h3>Pixchums</h3>
+        </div>
+        <div id="login-container">
+            <div id="login-data">
+                <p>Log-in</p>
+                <input type="text" placeholder="Username [New users only]" id="usernick" spellcheck="false">
+                <input type="text" placeholder="Email" id="email" spellcheck="false">
+                <input type="password" placeholder="Password" id="password" spellcheck="false">
+                <p id="LoginError" style="color: #bb4f4f; display:none;">Error, Try again!</p>
+            </div>
+            <div id="login-buttons">
+                <button id="login-button">Log-in</button>
+                <button id="register-button">Register</button>
+            </div>
+        </div>
+
+    </div>
+    <div id="update" style="display: none;">
+        <div id="update-container">
+            <h1>Oopsie! Seems like your version of app is outdated, update please!</h1>
+            <p>If your app wont autoupdate you can relaunch app and wait for a minute, or update manually from github.
+            </p>
+            <p> If you are already using lastest version please wait, I am already fixing it! If app is down for more
+                than 30 minutes please submit an issue on github.</p>
+            <p>Error 101</p>
+            <button>Github</button>
+        </div>
+    </div>
+
     <canvas id="canvas" width="10000" height="10000"></canvas>
     <div id="gui">
         <div id="gui-wrapper">
@@ -38,15 +71,15 @@
             <div id="userdata">
                 <div id="avatar"></div>
                 <div id="userstats">
-                    <p>Username</p>
+                    <p id="Stats-username">Username</p>
                     <div class="info">
                         <p>Pixels Placed</p>
                         <p id="pixel-stat">&</p>
                     </div>
                     <div class="info">
 
-                        <p>Cooldown</p>
-                        <p id="cooldown">&</p>
+                        <p>Cooldown:</p>
+                        <p id="cooldown">Place a pixel!</p>
                     </div>
                 </div>
             </div>

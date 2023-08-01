@@ -10,16 +10,24 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
   "devDependencies": {
+    "electron-builder": "^24.6.3",
     "electron-packager": "^17.1.1"
   },
   "build": {
+    "publish": {
+      "provider": "github",
+      "owner": "syrnikov",
+      "repo": "BetterPlace"
+    },
     "appId": "com.syrnikov.artem",
     "productName": "BetterPlace",
     "win": {
       "target": "nsis",
       "icon": "images/betterplace.ico"
     }
+  },
+  "dependencies": {
+    "electron-updater": "^6.1.1"
   }
 }

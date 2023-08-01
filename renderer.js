@@ -1,5 +1,5 @@
 // renderer.js
-
+const ver = 4;
 // Import the necessary Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
 import {
@@ -8,6 +8,11 @@ import {
   set,
   onValue,
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 
 // Your existing code...
 
@@ -28,7 +33,31 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(); // Get the Firebase database object
+const auth = getAuth();
 
+function setVersionNumber(versionNumber) {
+  const versionRef = ref(database, "constants/version");
+  set(versionRef, { number: versionNumber })
+    .then(() => {
+      console.log("Version number set successfully!");
+    })
+    .catch((error) => {
+      console.error("Error setting version number:", error);
+    });
+}
+setVersionNumber(ver);
+
+function initializeVersionCheck() {
+  const versionRef = ref(database, "constants/version");
+  onValue(versionRef, (snapshot) => {
+    const remoteVersion = snapshot.val()?.number; // Access the "number" field from the snapshot
+    if (remoteVersion !== ver) {
+      // Show the "update" div because the versions don't match
+      const updateDiv = document.getElementById("update");
+      updateDiv.style.display = "flex";
+    }
+  });
+}
 // ----- Canvas related setup -----
 
 // ... (your existing canvas-related code)
@@ -42,7 +71,7 @@ function savePlacedPixelsToDatabase() {
 
   placedPixels.forEach((pixel) => {
     const key = `${pixel.y}_${pixel.x}`;
-    pixelData[key] = { color: pixel.color };
+    pixelData[key] = { color: pixel.color, username: pixel.username }; // Store the username along with the pixel data
   });
 
   set(pixelsRef, pixelData);
@@ -51,6 +80,81 @@ function savePlacedPixelsToDatabase() {
 let placedPixels = [];
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Function for user registration
+  // Function for user registration
+  // Function for user registration
+  async function registerUser(usernick, email, password) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Save the usernick in the user's data in the Firebase database
+      const user = userCredential.user;
+      const userRef = ref(database, `users/${user.uid}`);
+      set(userRef, { email, usernick });
+
+      // The user is registered successfully
+      console.log("User registered:", user.uid);
+      document.getElementById("Stats-username").textContent = usernick;
+      document.getElementById("login").style.display = "none";
+    } catch (error) {
+      console.error("Error registering user:", error.message);
+      document.getElementById("LoginError").style.display = "block";
+    }
+  }
+
+  // Function for user login
+  async function loginUser(email, password) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Fetch the usernick from the Firebase database
+      const user = userCredential.user;
+      const userRef = ref(database, `users/${user.uid}`);
+
+      // Create a promise to handle the asynchronous retrieval of usernick
+      return new Promise((resolve, reject) => {
+        onValue(userRef, (snapshot) => {
+          const userData = snapshot.val();
+          if (userData) {
+            const usernick = userData.usernick;
+            document.getElementById("Stats-username").textContent = usernick;
+            document.getElementById("login").style.display = "none";
+            resolve(usernick); // Resolve the promise with usernick
+          } else {
+            reject(new Error("User data not found"));
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Error logging in:", error.message);
+      document.getElementById("LoginError").style.display = "block";
+      throw error; // Rethrow the error to handle it in the calling code, if necessary
+    }
+  }
+
+  // Function for user login
+
+  document.getElementById("login-button").addEventListener("click", () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    loginUser(email, password);
+  });
+
+  document.getElementById("register-button").addEventListener("click", () => {
+    const usernick = document.getElementById("usernick").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    registerUser(usernick, email, password);
+  });
+
   //setup ------- canvas settings
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
@@ -69,20 +173,28 @@ document.addEventListener("DOMContentLoaded", () => {
   let panY = 0;
 
   // Function to initialize canvas from Firebase database
+  initializeVersionCheck();
   function initializeCanvasFromDatabase() {
     const pixelsRef = ref(database, "pixels");
     onValue(pixelsRef, (snapshot) => {
       const pixelData = snapshot.val();
       if (pixelData) {
+        // Clear the existing placed pixels array
+        placedPixels.length = 0;
+
+        // Loop through the pixel data and update the placedPixels array
         for (const key in pixelData) {
           const [y, x] = key.split("_");
+          const username = pixelData[key].username; // Retrieve the username from the database
           placedPixels.push({
             x: parseInt(x),
             y: parseInt(y),
             color: pixelData[key].color,
+            username: username, // Store the username in the placedPixels array
           });
         }
 
+        // Redraw the canvas with the updated pixel data
         redraw();
       }
     });
@@ -97,15 +209,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateCooldownDisplay() {
     const cooldownDisplay = document.getElementById("cooldown");
     if (cooldownTime > 0) {
-      cooldownDisplay.textContent = `${cooldownTime} seconds`;
+      cooldownDisplay.textContent = ` ${cooldownTime}`;
     } else {
-      cooldownDisplay.textContent = "";
+      cooldownDisplay.textContent = "Place a pixel!";
     }
   }
 
   function startCooldown() {
     isCooldownActive = true; // Set the flag to indicate that the cooldown is active
-    cooldownTime = 0; //cooldown
+    cooldownTime = 10; //cooldown
     updateCooldownDisplay();
     const cooldownIntervalId = setInterval(() => {
       cooldownTime--;
@@ -123,14 +235,26 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = currentColor;
     ctx.fillRect(StartX, StartY, PixelSize, PixelSize);
 
-    // Store the placed pixel in the array
-    placedPixels.push({ x: pixelX, y: pixelY, color: currentColor });
+    // Get the logged-in user's usernick from the Firebase database
+    const userRef = ref(database, `users/${auth.currentUser.uid}`);
+    onValue(userRef, (snapshot) => {
+      const userData = snapshot.val();
+      if (userData) {
+        const usernick = userData.usernick;
+        const pixel = {
+          x: pixelX,
+          y: pixelY,
+          color: currentColor,
+          username: usernick,
+        };
+        placedPixels.push(pixel);
 
-    // Save the placed pixel data to the Firebase database
-    const pixelRef = ref(database, `pixels/${pixelY}_${pixelX}`);
-    set(pixelRef, { color: currentColor });
+        // Save the placed pixel data to the Firebase database
+        const pixelRef = ref(database, `pixels/${pixelY}_${pixelX}`);
+        set(pixelRef, { color: currentColor, username: usernick });
+      }
+    });
   }
-
   function listenForPixelChanges() {
     const pixelsRef = ref(database, "pixels");
     onValue(pixelsRef, (snapshot) => {
@@ -246,9 +370,24 @@ document.addEventListener("DOMContentLoaded", () => {
       // Draw the border outline around the cursor position
       const StartX = Math.floor(cursorX / PixelSize) * PixelSize;
       const StartY = Math.floor(cursorY / PixelSize) * PixelSize;
-      ctx.strokeStyle = "#000"; // Set the border color (change as needed)
+      ctx.strokeStyle = currentColor; // Set the border color (change as needed)
       ctx.lineWidth = 2; // Set the border width (change as needed)
       ctx.strokeRect(StartX, StartY, PixelSize, PixelSize);
+    }
+    const hoveredPixel = placedPixels.find((pixel) => {
+      const StartX = Math.floor(cursorX / PixelSize) * PixelSize;
+      const StartY = Math.floor(cursorY / PixelSize) * PixelSize;
+      return (
+        pixel.x === Math.floor(StartX / PixelSize) &&
+        pixel.y === Math.floor(StartY / PixelSize)
+      );
+    });
+
+    // Display the username if a pixel is found at the cursor position
+    if (hoveredPixel) {
+      ctx.font = "12px Peaberry";
+      ctx.fillStyle = "#000000";
+      ctx.fillText(hoveredPixel.username, cursorX, cursorY + 20);
     }
   }
 
@@ -276,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const dy = (cursorY - panY) / zoom;
 
     // Apply the new zoom and pan offsets
-    zoom /= 1.05; // Decrease zoom level by 5% (adjust this value for faster/slower zoom)
+    zoom /= 1.3; // Decrease zoom level by 5% (adjust this value for faster/slower zoom)
     panX = cursorX - dx * zoom;
     panY = cursorY - dy * zoom;
     redraw();
