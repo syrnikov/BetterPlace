@@ -15,13 +15,13 @@ This is an Electron-based collaborative canvas game where users can create pixel
 
 - Electron: A framework for building cross-platform desktop applications with web technologies.
 - Firebase: A real-time database and backend-as-a-service provided by Google.
-- HTML5 Canvas: Used for drawing and rendering the pixel art on the canvas.
-- JavaScript: The main programming language used for the game logic.
+- HTML5 Canvas: Used for drawing and rendering pixel art on the canvas.
+- JavaScript: The primary programming language used for the game logic.
 
 ## How to Use
 
 1. [Open releases tab.](https://github.com/syrnikov/BetterPlace/releases)
-2. Find latest release and download "dist.rar"
+2. Find the latest release and download "dist.rar"
 3. Unzip the file and run setup.exe
 4. App should appear on your desktop.
 
@@ -43,13 +43,14 @@ The application uses Firebase as the backend to synchronize pixel data between d
 ## Important Notes
 
 - This project is still in development, and there might be bugs or performance issues.
-- MacOs, Linux, Web versions and app autoupdate are coming soon.
-- Please be respectful of others' work and avoid vandalizing or spamming the canvas.
+- macOS, Linux, Web versions, and app auto-update are coming soon.
+- Please respect others' work and avoid vandalizing or spamming the canvas.
 - The application is designed for collaborative pixel art creation and may not be suitable for other types of drawings.
 
 ## Acknowledgments
 
 This project is inspired by the collaborative canvas concept popularized by "r/place" on Reddit.
+The font used is [Peaberry by Emily Huo](https://emhuo.itch.io/peaberry-pixel-font)
 
 ## License
 
@@ -59,10 +60,10 @@ This project is licensed under the [Creative Commons Attribution-NonCommercial-N
 
 ## Contributing
 
-Contributions to this project are welcome! If you find any issues or have suggestions for improvement, please feel free to submit a pull request.
+Contributions to this project are welcome! If you find any issues or have suggestions for improvement, please don't hesitate to submit a pull request.
 
 ## Contact
-
+Discord server of this Project: [Link](https://discord.gg/56DcTP4ZkS)
 If you have any questions or feedback, you can contact the project owner at [syrnikov.school@gmail.com](mailto:syrnikov.school@gmail.com).
 
 ---
