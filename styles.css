@@ -30,7 +30,7 @@ body {
 #pallete {
   pointer-events: all;
   display: flex;
-  width: 158px;
+  width: 184px;
   height: fit-content;
   padding: 2px;
   align-items: center;
@@ -160,4 +160,12 @@ input[type="password"] {
   color: #1d4581 !important;
   border: 2px solid #3e98cb;
   background: #70e5ff;
+}
+#preloader-iframe {
+  width: 100vw;
+  height: 100vh;
+  z-index: 101;
+  position: fixed;
+  top: 0px;
+  left: 0px;
 }

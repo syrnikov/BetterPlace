@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, remote, contextBridge } = require("electron");
 const path = require("path");
 
 let mainWindow;
@@ -11,17 +11,23 @@ function createWindow() {
     minHeight: 400,
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false, // Set to false for security
+      contextIsolation: true, // Enable context isolation
+      preload: path.join(__dirname, "preload.js"),
     },
   });
 
   mainWindow.loadFile(path.join(__dirname, "index.html"));
 
+  mainWindow.webContents.on("devtools-opened", () => {
+    mainWindow.webContents.closeDevTools();
+  });
+
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
 }
-app.setAsDefaultProtocolClient("BetterPlace");
+app.setAsDefaultProtocolClient("Pixchums v4");
 app.on("ready", createWindow);
 
 app.on("window-all-closed", () => {

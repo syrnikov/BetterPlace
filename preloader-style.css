@@ -1,0 +1,33 @@
+@font-face {
+  font-family: "Peaberry";
+  src: url(fonts/PeaberryBase.woff2);
+}
+body {
+  /* font-family: "Inter", sans-serif; */
+  font-family: "Peaberry";
+  overflow: hidden;
+}
+
+body {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+#preloader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#preloader img {
+  width: 50%;
+  height: 50%;
+}
+
+#preloader h3 {
+  margin-top: 20px;
+}

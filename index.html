@@ -13,6 +13,7 @@
 </head>
 
 <body>
+    <iframe src="preloader.html" id="preloader-iframe" style="display: block;"></iframe>
     <div id="login">
         <div id="login-title">
             <p>Welcome to</p>
@@ -36,12 +37,17 @@
     <div id="update" style="display: none;">
         <div id="update-container">
             <h1>Oopsie! Seems like your version of app is outdated, update please!</h1>
-            <p>If your app wont autoupdate you can relaunch app and wait for a minute, or update manually from github.
+            <p>If your app wont autoupdate you can relaunch app and wait for a minute, or update manually from discord
+                link below.
             </p>
             <p> If you are already using lastest version please wait, I am already fixing it! If app is down for more
-                than 30 minutes please submit an issue on github.</p>
+                than 30 minutes please submit an issue on discord server below.</p>
             <p>Error 101</p>
-            <button>Github</button>
+            <p>Join our discord server for fast help and updates, if link wont work try manually :
+                https://discord.gg/56DcTP4ZkS</p>
+            <iframe src="https://discord.com/widget?id=1136570413934190643&theme=dark" width="350" height="500"
+                allowtransparency="true" frameborder="0"
+                sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
         </div>
     </div>
 
@@ -49,35 +55,47 @@
     <div id="gui">
         <div id="gui-wrapper">
             <div id="pallete">
-                <div class="color " style="background-color: #E51D1D;" onclick="setColor('#E51D1D');"></div>
-                <div class="color" style="background-color: #F26C8C;" onclick="setColor('#F26C8C');"></div>
-                <div class="color" style="background-color: #FD6524;" onclick="setColor('#FD6524');"></div>
-                <div class="color" style="background-color: #FFB13C;" onclick="setColor('#FFB13C');"></div>
-                <div class="color" style="background-color: #44812F;" onclick="setColor('#44812F');"></div>
-                <div class="color" style="background-color: #1FDB8C;" onclick="setColor('#1FDB8C');"></div>
-                <div class="color" style="background-color: #1B56C7;" onclick="setColor('#1B56C7');"></div>
-                <div class="color" style="background-color: #40A9F5;" onclick="setColor('#40A9F5');"></div>
-                <div class="color" style="background-color: #8033CC;" onclick="setColor('#8033CC');"></div>
-                <div class="color" style="background-color: #CB6FF5;" onclick="setColor('#CB6FF5');"></div>
-                <div class="color" style="background-color: #534337;" onclick="setColor('#534337');"></div>
-                <div class="color" style="background-color: #E5C2A8;" onclick="setColor('#E5C2A8');"></div>
+                <div class="color" style="background-color: #811140;" onclick="setColor('#811140');"></div>
+                <div class="color" style="background-color: #D61443;" onclick="setColor('#D61443');"></div>
+                <div class="color" style="background-color: #EF6A20;" onclick="setColor('#EF6A20');"></div>
+                <div class="color" style="background-color: #FFB016;" onclick="setColor('#FFB016');"></div>
+                <div class="color" style="background-color: #FFDE6A;" onclick="setColor('#FFDE6A');"></div>
+                <div class="color" style="background-color: #198256;" onclick="setColor('#198256');"></div>
+                <div class="color" style="background-color: #47B812;" onclick="setColor('#47B812');"></div>
+                <div class="color" style="background-color: #9DFF7A;" onclick="setColor('#9DFF7A');"></div>
+                <div class="color" style="background-color: #1A929A;" onclick="setColor('#1A929A');"></div>
+                <div class="color" style="background-color: #1BDBAD;" onclick="setColor('#1BDBAD');"></div>
+                <div class="color" style="background-color: #96FFE6;" onclick="setColor('#96FFE6');"></div>
+                <div class="color" style="background-color: #006BCE;" onclick="setColor('#006BCE');"></div>
+                <div class="color" style="background-color: #11A9FF;" onclick="setColor('#11A9FF');"></div>
+                <div class="color" style="background-color: #32DAFF;" onclick="setColor('#32DAFF');"></div>
+                <div class="color" style="background-color: #A4DBFA;" onclick="setColor('#A4DBFA');"></div>
+                <div class="color" style="background-color: #5328CE;" onclick="setColor('#5328CE');"></div>
+                <div class="color" style="background-color: #8E4DF8;" onclick="setColor('#8E4DF8');"></div>
+                <div class="color" style="background-color: #AB77FF;" onclick="setColor('#AB77FF');"></div>
+                <div class="color" style="background-color: #8827AA;" onclick="setColor('#8827AA');"></div>
+                <div class="color" style="background-color: #E05AEC;" onclick="setColor('#E05AEC');"></div>
+                <div class="color" style="background-color: #F68FFF;" onclick="setColor('#F68FFF');"></div>
+                <div class="color" style="background-color: #C3006A;" onclick="setColor('#C3006A');"></div>
+                <div class="color" style="background-color: #FF2BAA;" onclick="setColor('#FF2BAA');"></div>
+                <div class="color" style="background-color: #FF88CF;" onclick="setColor('#FF88CF');"></div>
+                <div class="color" style="background-color: #43301E;" onclick="setColor('#43301E');"></div>
+                <div class="color" style="background-color: #794F29;" onclick="setColor('#794F29');"></div>
+                <div class="color" style="background-color: #9A5D25;" onclick="setColor('#9A5D25');"></div>
+                <div class="color" style="background-color: #C6874D;" onclick="setColor('#C6874D');"></div>
+                <div class="color" style="background-color: #F9BB81;" onclick="setColor('#F9BB81');"></div>
                 <div class="color selected" style="background-color: #000000;" onclick="setColor('#000000');"></div>
-                <div class="color" style="background-color: #363636;" onclick="setColor('#363636');"></div>
-                <div class="color" style="background-color: #585858;" onclick="setColor('#585858');"></div>
-                <div class="color" style="background-color: #828282;" onclick="setColor('#828282');"></div>
-                <div class="color" style="background-color: #BCBCBC;" onclick="setColor('#BCBCBC');"></div>
-                <div class="color" style="background-color: #FFFFFF;" onclick="setColor('#FFFFFF');"></div>
+                <div class="color" style="background-color: #393939;" onclick="setColor('#393939');"></div>
+                <div class="color" style="background-color: #5B5B5B;" onclick="setColor('#5B5B5B');"></div>
+                <div class="color" style="background-color: #8B8B8B;" onclick="setColor('#8B8B8B');"></div>
+                <div class="color" style="background-color: #CDCDCD;" onclick="setColor('#CDCDCD');"></div>
+                <div class="color" style="background-color: #FFF;" onclick="setColor('#FFF');"></div>
             </div>
             <div id="userdata">
-                <div id="avatar"></div>
                 <div id="userstats">
                     <p id="Stats-username">Username</p>
+                    <div id="cursor-position"></div>
                     <div class="info">
-                        <p>Pixels Placed</p>
-                        <p id="pixel-stat">&</p>
-                    </div>
-                    <div class="info">
-
                         <p>Cooldown:</p>
                         <p id="cooldown">Place a pixel!</p>
                     </div>
@@ -85,7 +103,6 @@
             </div>
         </div>
     </div>
-
 
 
     <script type="module" src="renderer.js"></script>
