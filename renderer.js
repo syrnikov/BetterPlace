@@ -22,20 +22,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 // renderer.js
 
-// Your existing code...
-
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCnglllo9tD1B-LrzVszFyXvhfN2j5Go2w",
-  authDomain: "betterplace-b236d.firebaseapp.com",
-  databaseURL:
-    "https://betterplace-b236d-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "betterplace-b236d",
-  storageBucket: "betterplace-b236d.appspot.com",
-  messagingSenderId: "764902930248",
-  appId: "1:764902930248:web:c1b20982ff45cd1d8be57d",
-  measurementId: "G-ZTJ0CC2QKV",
+  //your firebase storage config should be here
 };
 
 // Initialize Firebase
