@@ -64,6 +64,6 @@ Contributions to this project are welcome! If you find any issues or have sugges
 
 ## Contact
 Discord server of this Project: [Link](https://discord.gg/56DcTP4ZkS)
-If you have any questions or feedback, you can contact the project owner at [syrnikov.school@gmail.com](mailto:syrnikov.school@gmail.com).
+If you have any questions or feedback, you can contact the project owner at [syrnikoff@icloud.com](mailto:syrnikoff@icloud.com).
 
 ---
